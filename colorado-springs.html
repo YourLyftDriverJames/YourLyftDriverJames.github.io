@@ -106,6 +106,13 @@
 
   .footer{margin-top:3rem;color:var(--text-muted);font-size:.875rem;text-align:center;position:relative;z-index:1;}
 
+  .visitcos-tile{background:#002d56 !important;border-color:rgba(255,255,255,.15) !important;flex-direction:column;gap:.3rem;}
+  .visitcos-tile:hover{border-color:rgba(255,255,255,.4) !important;}
+  .visitcos-tile svg{width:70px;height:auto;}
+  .visitcos-text{display:flex;flex-direction:column;align-items:center;line-height:1.15;}
+  .visitcos-text em{font-style:normal;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.75);font-family:'Inter',sans-serif;font-weight:500;}
+  .visitcos-text strong{font-family:'Sora',sans-serif;font-weight:800;font-size:.875rem;color:#fff;text-transform:uppercase;letter-spacing:.03em;}
+
   @media(prefers-reduced-motion:reduce){.tile,.icon-tile,.suggest-btn{transition:none;}}
 
   @media(max-width:380px){
@@ -141,8 +148,15 @@
       <span>Restaurants</span>
     </a>
 
-    <a class="tile" href="attractions.html">
-      <span>Attractions</span>
+    <a class="tile visitcos-tile" href="https://www.visitcos.com/" target="_blank" rel="noopener noreferrer" aria-label="Visit Colorado Springs">
+      <svg viewBox="0 0 90 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <polygon points="10,36 30,10 44,24 56,14 76,36" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.55)" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="68" cy="18" r="6" fill="rgba(255,255,255,0.7)"/>
+      </svg>
+      <span class="visitcos-text">
+        <em>visit</em>
+        <strong>Colorado Springs</strong>
+      </span>
     </a>
 
   </nav>
