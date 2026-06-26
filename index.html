@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Your Lyft Driver James | Colorado</title>
-<meta name="description" content="Colorado local recommendations and visitor guides from Your Lyft Driver James.">
+<meta name="description" content="Colorado visitor guides and local recommendations from Your Lyft Driver James.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -23,76 +23,65 @@
   .hero h1{font-family:'Sora',sans-serif;font-weight:800;font-size:clamp(2rem,8vw,2.75rem);line-height:1.15;margin:0 0 1rem;position:relative;z-index:1;}
   .hero p{color:var(--text-muted);font-size:1.0625rem;line-height:1.6;max-width:44ch;margin:0;position:relative;z-index:1;}
 
-  /* ── MAP ── */
-  .map-heading{font-family:'Sora',sans-serif;font-weight:700;font-size:1.125rem;text-align:center;margin:2.75rem 0 .6rem;position:relative;z-index:1;}
-  .map-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem .9rem;margin:0 0 .75rem;position:relative;z-index:1;}
+  .map-heading{font-family:'Sora',sans-serif;font-weight:700;font-size:1.125rem;text-align:center;margin:2.75rem 0 .5rem;position:relative;z-index:1;}
+  .map-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:.35rem .85rem;margin:0 0 .65rem;position:relative;z-index:1;}
   .leg{display:flex;align-items:center;gap:.3rem;font-size:.68rem;font-family:'Sora',sans-serif;font-weight:600;color:var(--text-muted);}
   .leg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 
   .map-wrap{
     position:relative;z-index:1;margin:0 0 2.5rem;
-    border:2px solid #f2a900;border-radius:3px;
+    border:2px solid #f2a900;border-radius:4px;
     overflow:hidden;
-    /* Maintain image aspect ratio: 1066x821 */
-    aspect-ratio:1066/821;
+    aspect-ratio:1132/881;
+    background:#e8e4e0;
   }
-  .map-wrap img{
-    width:100%;height:100%;
-    object-fit:cover;display:block;
-  }
-  .map-pins{
-    position:absolute;inset:0;
-  }
+  .map-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+  .map-pins{position:absolute;inset:0;}
 
-  /* Each pin is an absolute element */
   .pin{
     position:absolute;
-    display:flex;
-    align-items:center;
+    display:flex;align-items:center;
     text-decoration:none;
-    cursor:pointer;
-    /* shift so dot center is at the lat/lon point */
     transform:translate(-50%,-50%);
+    z-index:2;
   }
   .pin:focus{outline:none;}
-
   .pin-dot{
-    width:7px;height:7px;border-radius:50%;
-    flex-shrink:0;
-    border:1px solid rgba(0,0,0,0.4);
-    box-shadow:0 0 4px rgba(0,0,0,0.6);
-    transition:transform .12s;
-    position:relative;z-index:2;
+    width:8px;height:8px;border-radius:50%;flex-shrink:0;
+    border:1.5px solid rgba(255,255,255,0.8);
+    box-shadow:0 1px 4px rgba(0,0,0,0.55);
+    transition:transform .12s;z-index:3;
   }
-  .pin:hover .pin-dot{transform:scale(1.6);}
-  .pin:focus .pin-dot{outline:2px solid #ec4899;outline-offset:2px;}
+  .pin:hover .pin-dot{transform:scale(1.65);}
+  .pin:focus .pin-dot{box-shadow:0 0 0 2px #7c3aed;}
 
-  .pin-label-r,.pin-label-l{
+  .pill-r,.pill-l{
+    display:inline-flex;flex-direction:column;
+    background:rgba(6,4,12,0.88);
+    border:1px solid rgba(255,255,255,0.18);
+    border-radius:3px;
+    padding:2px 5px;
     font-family:'Sora',sans-serif;font-weight:700;
-    font-size:clamp(7px,1.9vw,10px);
-    line-height:1.1;
-    color:#fff;
-    text-shadow:0 0 3px #000, 0 1px 4px rgba(0,0,0,0.9), 1px 1px 0 #000;
-    white-space:nowrap;
-    pointer-events:none;
+    font-size:clamp(7px,1.95vw,9.5px);
+    color:#f5f3f7;
+    white-space:nowrap;line-height:1.2;
+    pointer-events:none;user-select:none;
   }
-  .pin-label-r{margin-left:4px;}
-  .pin-label-l{margin-right:4px;order:-1;text-align:right;}
+  .pill-r{margin-left:4px;}
+  .pill-l{margin-right:4px;order:-1;text-align:right;}
+  .pill-line{display:block;}
 
-  /* ── UTILITY TILES ── */
   .tile-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;margin:0 0 2.5rem;position:relative;z-index:1;}
   .tile{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:80px;padding:.9rem .5rem .8rem;border-radius:16px;background:var(--surface);border:1px solid var(--border);text-decoration:none;color:var(--text);overflow:hidden;transition:border-color .15s,transform .15s;}
   .tile::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--grad-start),var(--grad-mid),var(--grad-end));}
   .tile:hover{border-color:rgba(255,255,255,.2);transform:translateY(-2px);}
   .tile:focus-visible{outline:2px solid var(--grad-mid);outline-offset:3px;}
   .tile span{font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(.78rem,2.8vw,.875rem);line-height:1.3;}
-
   .icon-row{display:flex;justify-content:center;gap:.85rem;margin:0 0 2.75rem;position:relative;z-index:1;}
   .icon-tile{display:flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:16px;background:var(--surface);border:1px solid var(--border);transition:border-color .15s,transform .15s;}
   .icon-tile:hover{border-color:rgba(255,255,255,.2);transform:translateY(-2px);}
   .icon-tile:focus-visible{outline:2px solid var(--grad-mid);outline-offset:3px;}
   .icon-tile svg{width:28px;height:28px;}
-
   .suggest{text-align:center;position:relative;z-index:1;}
   .prompt{font-family:'Sora',sans-serif;font-weight:700;font-size:1.125rem;text-align:center;margin:0 0 1.25rem;position:relative;z-index:1;}
   .suggest-btn{display:inline-flex;align-items:center;gap:.5rem;font-family:'Sora',sans-serif;font-weight:700;font-size:1rem;color:#fff;background:linear-gradient(135deg,var(--grad-start),var(--grad-mid),var(--grad-end));border-radius:16px;padding:.9rem 1.6rem;text-decoration:none;transition:transform .15s,opacity .15s;}
@@ -104,144 +93,109 @@
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-PXPNNMJEVV"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-PXPNNMJEVV');
-</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-PXPNNMJEVV');</script>
 </head>
 <body>
 <div class="page">
   <div class="glow" aria-hidden="true"></div>
-
   <div class="badge" aria-hidden="true">J</div>
   <p class="eyebrow">Colorado &middot; Your Lyft Driver</p>
-
   <header class="hero">
     <h1>Hey, I'm James.</h1>
-    <p>Navy veteran turned Lyft driver with 16,000+ rides across Colorado. I've built this as a directory of each area's official visitor guide — the best starting point before you explore. Tap any city on the map to go straight to their tourism page. And if you know a hidden-gem restaurant I should add to my list, I'd genuinely love to hear about it — tap the email button below the map.</p>
+    <p>Navy veteran turned Lyft driver with 16,000+ rides across Colorado. I've built this as a directory of each area's official visitor guide &mdash; the best starting point before you explore. Tap any city on the map to go straight to their tourism page. And if you know a hidden-gem restaurant I should add to my list, I'd love to hear about it.</p>
   </header>
-
   <h2 class="map-heading">Tap a city to explore</h2>
-
-  <div class="map-legend" aria-hidden="true">
-    <span class="leg"><span class="leg-dot" style="background:#5bbf8a"></span>Mountains</span>
-    <span class="leg"><span class="leg-dot" style="background:#60aadc"></span>N. Colorado</span>
-    <span class="leg"><span class="leg-dot" style="background:#f2c94c"></span>Front Range</span>
-    <span class="leg"><span class="leg-dot" style="background:#d4734a"></span>Western Slope</span>
-    <span class="leg"><span class="leg-dot" style="background:#c49a3a"></span>S. Colorado</span>
-  </div>
-
+  <div class="map-legend" aria-hidden="true"><span class="leg"><span class="leg-dot" style="background:#3aaa72"></span>Mountains</span>  <span class="leg"><span class="leg-dot" style="background:#3d8fd4"></span>N. Colorado</span>  <span class="leg"><span class="leg-dot" style="background:#d9920a"></span>Front Range</span>  <span class="leg"><span class="leg-dot" style="background:#c85a30"></span>Western Slope</span>  <span class="leg"><span class="leg-dot" style="background:#b8861e"></span>S. Colorado</span></div>
   <div class="map-wrap">
-    <img src="colorado-terrain.jpg" alt="Topographic map of Colorado" loading="lazy">
-    <nav class="map-pins" aria-label="Colorado cities map">
-  <a href="https://www.visitftcollins.com/" class="pin" aria-label="Ft. Collins" target="_blank" rel="noopener noreferrer" style="left:56.6%;top:12.1%;">
-    <span class="pin-dot" style="background:#60aadc"></span>
-    <span class="pin-label-r">Ft. Collins</span>
-  </a>
-  <a href="https://visitloveland.com/" class="pin" aria-label="Loveland" target="_blank" rel="noopener noreferrer" style="left:56.6%;top:16.7%;">
-    <span class="pin-dot" style="background:#60aadc"></span>
-    <span class="pin-label-l">Loveland</span>
-  </a>
-  <a href="https://www.visitgreeley.com/" class="pin" aria-label="Greeley" target="_blank" rel="noopener noreferrer" style="left:61.8%;top:14.0%;">
-    <span class="pin-dot" style="background:#60aadc"></span>
-    <span class="pin-label-r">Greeley</span>
-  </a>
-  <a href="https://www.steamboatchamber.com/" class="pin" aria-label="Steamboat Spgs" target="_blank" rel="noopener noreferrer" style="left:31.4%;top:14.5%;">
-    <span class="pin-dot" style="background:#5bbf8a"></span>
-    <span class="pin-label-r">Steamboat Spgs</span>
-  </a>
-  <a href="https://www.visitestespark.com/" class="pin" aria-label="Estes Park" target="_blank" rel="noopener noreferrer" style="left:50.4%;top:17.1%;">
-    <span class="pin-dot" style="background:#5bbf8a"></span>
-    <span class="pin-label-l">Estes Park</span>
-  </a>
-  <a href="https://visitglenwood.com/" class="pin" aria-label="Glenwood Spgs" target="_blank" rel="noopener noreferrer" style="left:25.1%;top:36.9%;">
-    <span class="pin-dot" style="background:#5bbf8a"></span>
-    <span class="pin-label-l">Glenwood Spgs</span>
-  </a>
-  <a href="https://discovervail.com" class="pin" aria-label="Vail" target="_blank" rel="noopener noreferrer" style="left:38.5%;top:34.8%;">
-    <span class="pin-dot" style="background:#5bbf8a"></span>
-    <span class="pin-label-l">Vail</span>
-  </a>
-  <a href="https://gobreck.com" class="pin" aria-label="Breckenridge" target="_blank" rel="noopener noreferrer" style="left:43.1%;top:38.6%;">
-    <span class="pin-dot" style="background:#5bbf8a"></span>
-    <span class="pin-label-r">Breckenridge</span>
-  </a>
-  <a href="https://aspenchamber.org" class="pin" aria-label="Aspen / Snowmass" target="_blank" rel="noopener noreferrer" style="left:32.1%;top:45.5%;">
-    <span class="pin-dot" style="background:#5bbf8a"></span>
-    <span class="pin-label-l">Aspen / Snowmass</span>
-  </a>
-  <a href="https://www.visitcrestedbutte.com/" class="pin" aria-label="Crested Butte" target="_blank" rel="noopener noreferrer" style="left:29.7%;top:53.1%;">
-    <span class="pin-dot" style="background:#5bbf8a"></span>
-    <span class="pin-label-l">Crested Butte</span>
-  </a>
-  <a href="https://www.visittelluride.com/" class="pin" aria-label="Telluride" target="_blank" rel="noopener noreferrer" style="left:18.2%;top:75.2%;">
-    <span class="pin-dot" style="background:#5bbf8a"></span>
-    <span class="pin-label-r">Telluride</span>
-  </a>
-  <a href="boulder.html" class="pin" aria-label="Boulder" style="left:53.9%;top:26.0%;">
-    <span class="pin-dot" style="background:#f2c94c"></span>
-    <span class="pin-label-l">Boulder</span>
-  </a>
-  <a href="denver-area.html" class="pin" aria-label="Denver Area" style="left:57.9%;top:32.4%;">
-    <span class="pin-dot" style="background:#f2c94c"></span>
-    <span class="pin-label-r">Denver Area</span>
-  </a>
-  <a href="colorado-springs.html" class="pin" aria-label="Colorado Springs / Manitou" style="left:60.3%;top:54.0%;">
-    <span class="pin-dot" style="background:#f2c94c"></span>
-    <span class="pin-label-r">Colorado Springs / Manitou</span>
-  </a>
-  <a href="canon-city.html" class="pin" aria-label="Cañon City" style="left:54.4%;top:63.3%;">
-    <span class="pin-dot" style="background:#f2c94c"></span>
-    <span class="pin-label-l">Cañon City</span>
-  </a>
-  <a href="pueblo.html" class="pin" aria-label="Pueblo" style="left:63.2%;top:67.9%;">
-    <span class="pin-dot" style="background:#f2c94c"></span>
-    <span class="pin-label-r">Pueblo</span>
-  </a>
-  <a href="https://www.visitgrandjunction.com/" class="pin" aria-label="Grand Junction" target="_blank" rel="noopener noreferrer" style="left:7.7%;top:48.6%;">
-    <span class="pin-dot" style="background:#d4734a"></span>
-    <span class="pin-label-r">Grand Junction</span>
-  </a>
-  <a href="https://www.durango.org/" class="pin" aria-label="Durango" target="_blank" rel="noopener noreferrer" style="left:17.2%;top:91.2%;">
-    <span class="pin-dot" style="background:#d4734a"></span>
-    <span class="pin-label-r">Durango</span>
-  </a>
-  <a href="https://www.visitpagosasprings.com/" class="pin" aria-label="Pagosa Springs" target="_blank" rel="noopener noreferrer" style="left:29.4%;top:87.5%;">
-    <span class="pin-dot" style="background:#d4734a"></span>
-    <span class="pin-label-r">Pagosa Springs</span>
-  </a>
-  <a href="https://www.nps.gov/meve/index.htm" class="pin" aria-label="Mesa Verde NP" target="_blank" rel="noopener noreferrer" style="left:8.6%;top:93.1%;">
-    <span class="pin-dot" style="background:#d4734a"></span>
-    <span class="pin-label-r">Mesa Verde NP</span>
-  </a>
-  <a href="https://www.colorfulcolorado.com/" class="pin" aria-label="Salida / BV" target="_blank" rel="noopener noreferrer" style="left:43.7%;top:61.2%;">
-    <span class="pin-dot" style="background:#c49a3a"></span>
-    <span class="pin-label-l">Salida / BV</span>
-  </a>
-  <a href="https://www.nps.gov/grsa/index.htm" class="pin" aria-label="Great Sand Dunes" target="_blank" rel="noopener noreferrer" style="left:49.4%;top:80.2%;">
-    <span class="pin-dot" style="background:#c49a3a"></span>
-    <span class="pin-label-l">Great Sand Dunes</span>
-  </a>
-  <a href="https://www.alamosa.org/" class="pin" aria-label="Alamosa" target="_blank" rel="noopener noreferrer" style="left:45.5%;top:86.4%;">
-    <span class="pin-dot" style="background:#c49a3a"></span>
-    <span class="pin-label-l">Alamosa</span>
-  </a>
-  <a href="https://visittrinidadcolorado.com/" class="pin" aria-label="Trinidad" target="_blank" rel="noopener noreferrer" style="left:64.8%;top:93.6%;">
-    <span class="pin-dot" style="background:#c49a3a"></span>
-    <span class="pin-label-l">Trinidad</span>
-  </a>
+    <img src="colorado-relief.jpg" alt="Relief map of Colorado" loading="lazy">
+    <nav class="map-pins" aria-label="Colorado cities — tap to explore">
+      <a href="north-of-denver.html" class="pin" aria-label="N. Colorado" style="left:58.4%;top:13.3%;">
+        <span class="pin-dot" style="background:#3d8fd4"></span>
+        <span class="pill-r">N. Colorado</span>
+      </a>
+      <a href="https://www.steamboatchamber.com/" class="pin" aria-label="Steamboat Spgs" target="_blank" rel="noopener noreferrer" style="left:31.6%;top:12.9%;">
+        <span class="pin-dot" style="background:#3aaa72"></span>
+        <span class="pill-r">Steamboat Spgs</span>
+      </a>
+      <a href="https://www.visitestespark.com/" class="pin" aria-label="Estes Park" target="_blank" rel="noopener noreferrer" style="left:50.3%;top:15.6%;">
+        <span class="pin-dot" style="background:#3aaa72"></span>
+        <span class="pill-l">Estes Park</span>
+      </a>
+      <a href="https://visitglenwood.com/" class="pin" aria-label="Glenwood Spgs" target="_blank" rel="noopener noreferrer" style="left:24.6%;top:36.3%;">
+        <span class="pin-dot" style="background:#3aaa72"></span>
+        <span class="pill-l">Glenwood Spgs</span>
+      </a>
+      <a href="https://discovervail.com" class="pin" aria-label="Vail" target="_blank" rel="noopener noreferrer" style="left:38.2%;top:33.9%;">
+        <span class="pin-dot" style="background:#3aaa72"></span>
+        <span class="pill-l">Vail</span>
+      </a>
+      <a href="https://gobreck.com" class="pin" aria-label="Breckenridge" target="_blank" rel="noopener noreferrer" style="left:43.0%;top:38.0%;">
+        <span class="pin-dot" style="background:#3aaa72"></span>
+        <span class="pill-r">Breckenridge</span>
+      </a>
+      <a href="https://aspenchamber.org" class="pin" aria-label="Aspen / Snowmass" target="_blank" rel="noopener noreferrer" style="left:31.8%;top:45.2%;">
+        <span class="pin-dot" style="background:#3aaa72"></span>
+        <span class="pill-l">Aspen / Snowmass</span>
+      </a>
+      <a href="https://www.visitcrestedbutte.com/" class="pin" aria-label="Crested Butte" target="_blank" rel="noopener noreferrer" style="left:29.4%;top:53.3%;">
+        <span class="pin-dot" style="background:#3aaa72"></span>
+        <span class="pill-r">Crested Butte</span>
+      </a>
+      <a href="https://www.visittelluride.com/" class="pin" aria-label="Telluride" target="_blank" rel="noopener noreferrer" style="left:17.6%;top:76.5%;">
+        <span class="pin-dot" style="background:#3aaa72"></span>
+        <span class="pill-r">Telluride</span>
+      </a>
+      <a href="boulder.html" class="pin" aria-label="Boulder" style="left:53.9%;top:24.7%;">
+        <span class="pin-dot" style="background:#d9920a"></span>
+        <span class="pill-l">Boulder</span>
+      </a>
+      <a href="denver-area.html" class="pin" aria-label="Denver Area" style="left:57.9%;top:31.5%;">
+        <span class="pin-dot" style="background:#d9920a"></span>
+        <span class="pill-r">Denver Area</span>
+      </a>
+      <a href="colorado-springs.html" class="pin" aria-label="Colorado Springs / Manitou Springs" style="left:60.4%;top:54.2%;">
+        <span class="pin-dot" style="background:#d9920a"></span>
+        <span class="pill-r"><span class="pill-line">Colorado Springs</span><span class="pill-line">/ Manitou Springs</span></span>
+      </a>
+      <a href="https://www.colorfulcolorado.com/" class="pin" aria-label="Salida / BV" target="_blank" rel="noopener noreferrer" style="left:43.5%;top:61.6%;">
+        <span class="pin-dot" style="background:#b8861e"></span>
+        <span class="pill-l">Salida / BV</span>
+      </a>
+      <a href="canon-city.html" class="pin" aria-label="Cañon City" style="left:54.3%;top:64.0%;">
+        <span class="pin-dot" style="background:#d9920a"></span>
+        <span class="pill-l">Cañon City</span>
+      </a>
+      <a href="pueblo.html" class="pin" aria-label="Pueblo" style="left:63.4%;top:68.6%;">
+        <span class="pin-dot" style="background:#d9920a"></span>
+        <span class="pill-r">Pueblo</span>
+      </a>
+      <a href="https://www.visitgrandjunction.com/" class="pin" aria-label="Grand Junction" target="_blank" rel="noopener noreferrer" style="left:7.1%;top:48.4%;">
+        <span class="pin-dot" style="background:#c85a30"></span>
+        <span class="pill-r">Grand Junction</span>
+      </a>
+      <a href="https://www.durango.org/" class="pin" aria-label="Durango" target="_blank" rel="noopener noreferrer" style="left:16.7%;top:93.1%;">
+        <span class="pin-dot" style="background:#c85a30"></span>
+        <span class="pill-r">Durango</span>
+      </a>
+      <a href="https://www.visitpagosasprings.com/" class="pin" aria-label="Pagosa Springs" target="_blank" rel="noopener noreferrer" style="left:29.1%;top:93.2%;">
+        <span class="pin-dot" style="background:#c85a30"></span>
+        <span class="pill-l">Pagosa Springs</span>
+      </a>
+      <a href="southern-colorado.html" class="pin" aria-label="San Luis Valley" style="left:48.0%;top:85.0%;">
+        <span class="pin-dot" style="background:#b8861e"></span>
+        <span class="pill-l">San Luis Valley</span>
+      </a>
+      <a href="https://visittrinidadcolorado.com/" class="pin" aria-label="Trinidad" target="_blank" rel="noopener noreferrer" style="left:64.9%;top:95.7%;">
+        <span class="pin-dot" style="background:#b8861e"></span>
+        <span class="pill-l">Trinidad</span>
+      </a>
     </nav>
   </div>
-
-  <!-- Non-location tiles -->
   <nav class="tile-grid" aria-label="Additional links">
     <a class="tile" href="tip.html"><span>Send a Tip or Gift</span></a>
     <a class="tile" href="https://www.codot.gov/safety/carseats/assets/2024/cps_hb241055technicianfactsheet.pdf" target="_blank" rel="noopener noreferrer"><span>CO Child Seat Laws</span></a>
     <a class="tile" href="https://help.lyft.com/business/hc/en-us/articles/360001556927-Age-restrictions-for-transporting-minors" target="_blank" rel="noopener noreferrer"><span>Lyft Minors Policy</span></a>
   </nav>
-
   <div class="icon-row">
     <a class="icon-tile" href="https://www.youtube.com/@lyftdriverjames" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
       <svg viewBox="0 0 24 24" fill="none"><rect x="1" y="5" width="22" height="14" rx="4" fill="url(#yt)"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#0b0a10"/><defs><linearGradient id="yt" x1="1" y1="5" x2="23" y2="19" gradientUnits="userSpaceOnUse"><stop stop-color="#7c3aed"/><stop offset=".5" stop-color="#ec4899"/><stop offset="1" stop-color="#f97316"/></linearGradient></defs></svg>
@@ -250,18 +204,11 @@
       <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="url(#ig)" stroke-width="2"/><circle cx="12" cy="12" r="4.5" stroke="url(#ig)" stroke-width="2"/><circle cx="17.6" cy="6.4" r="1.3" fill="url(#ig)"/><defs><linearGradient id="ig" x1="2" y1="22" x2="22" y2="2" gradientUnits="userSpaceOnUse"><stop stop-color="#7c3aed"/><stop offset=".5" stop-color="#ec4899"/><stop offset="1" stop-color="#f97316"/></linearGradient></defs></svg>
     </a>
   </div>
-
   <section class="suggest">
     <h2 class="prompt">Know a hidden gem I should try?</h2>
-    <a class="suggest-btn" href="mailto:DurangoLyft@gmail.com?subject=Hidden%20Gem%20Restaurant%20Recommendation&body=Restaurant%20Name%3A%20%0AAddress%3A%20%0AWhy%20I%20love%20it%3A%20">
-      Send me your pick
-    </a>
+    <a class="suggest-btn" href="mailto:DurangoLyft@gmail.com?subject=Hidden%20Gem%20Restaurant%20Recommendation&body=Restaurant%20Name%3A%20%0AAddress%3A%20%0AWhy%20I%20love%20it%3A%20">Send me your pick</a>
   </section>
-
-  <footer class="footer">
-    <p>Thanks for riding — see you on the road.</p>
-  </footer>
-
+  <footer class="footer"><p>Thanks for riding &mdash; see you on the road.</p></footer>
 </div>
 </body>
 </html>
