@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
   :root{
     --bg:#0b0a10;--surface:#17141e;--border:rgba(255,255,255,.07);
@@ -28,68 +29,67 @@
   .leg{display:flex;align-items:center;gap:.3rem;font-size:.68rem;font-family:'Sora',sans-serif;font-weight:600;color:var(--text-muted);}
   .leg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 
+  /* MAP */
   .map-wrap{
     position:relative;z-index:1;margin:0 0 2.5rem;
     border:2px solid #f2a900;border-radius:4px;
-    overflow:hidden;
-    aspect-ratio:1132/881;
-    background:#e8e4e0;
+    overflow:hidden;height:420px;
   }
-  .map-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
-  .map-pins{position:absolute;inset:0;}
+  #co-map{width:100%;height:100%;}
 
-  .pin{
-    position:absolute;
-    display:flex;align-items:center;
-    text-decoration:none;
-    transform:translate(-50%,-50%);
-    z-index:2;
-  }
-  .pin:focus{outline:none;}
-  .pin-dot{
-    width:8px;height:8px;border-radius:50%;flex-shrink:0;
-    border:1.5px solid rgba(255,255,255,0.8);
-    box-shadow:0 1px 4px rgba(0,0,0,0.55);
-    transition:transform .12s;z-index:3;
-  }
-  .pin:hover .pin-dot{transform:scale(1.65);}
-  .pin:focus .pin-dot{box-shadow:0 0 0 2px #7c3aed;}
+  /* Leaflet attribution */
+  .leaflet-control-attribution{font-size:8px!important;}
 
-  .pill-r,.pill-l{
+  /* Custom pin markers */
+  .pm{background:none!important;border:none!important;}
+  .pm-dot{
+    width:10px;height:10px;border-radius:50%;
+    border:2px solid rgba(255,255,255,0.9);
+    box-shadow:0 1px 5px rgba(0,0,0,0.7);
+    cursor:pointer;
+    transition:transform .12s;
+  }
+  .pm:hover .pm-dot{transform:scale(1.5);}
+  .pm-pill{
+    position:absolute;top:50%;transform:translateY(-50%);
     display:inline-flex;flex-direction:column;
     background:rgba(6,4,12,0.88);
-    border:1px solid rgba(255,255,255,0.18);
-    border-radius:3px;
-    padding:2px 5px;
+    border:1px solid rgba(255,255,255,0.22);
+    border-radius:4px;padding:2px 6px 3px;
     font-family:'Sora',sans-serif;font-weight:700;
-    font-size:clamp(7px,1.95vw,9.5px);
-    color:#f5f3f7;
-    white-space:nowrap;line-height:1.2;
+    font-size:11px;color:#f5f3f7;
+    white-space:nowrap;line-height:1.25;
     pointer-events:none;user-select:none;
   }
-  .pill-r{margin-left:4px;}
-  .pill-l{margin-right:4px;order:-1;text-align:right;}
-  .pill-line{display:block;}
+  .pm-r{left:14px;}
+  .pm-l{right:14px;text-align:right;}
+  .pl{display:block;}
 
+  /* Utility tiles */
   .tile-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;margin:0 0 2.5rem;position:relative;z-index:1;}
   .tile{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:80px;padding:.9rem .5rem .8rem;border-radius:16px;background:var(--surface);border:1px solid var(--border);text-decoration:none;color:var(--text);overflow:hidden;transition:border-color .15s,transform .15s;}
   .tile::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--grad-start),var(--grad-mid),var(--grad-end));}
   .tile:hover{border-color:rgba(255,255,255,.2);transform:translateY(-2px);}
   .tile:focus-visible{outline:2px solid var(--grad-mid);outline-offset:3px;}
   .tile span{font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(.78rem,2.8vw,.875rem);line-height:1.3;}
+
   .icon-row{display:flex;justify-content:center;gap:.85rem;margin:0 0 2.75rem;position:relative;z-index:1;}
   .icon-tile{display:flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:16px;background:var(--surface);border:1px solid var(--border);transition:border-color .15s,transform .15s;}
   .icon-tile:hover{border-color:rgba(255,255,255,.2);transform:translateY(-2px);}
   .icon-tile:focus-visible{outline:2px solid var(--grad-mid);outline-offset:3px;}
   .icon-tile svg{width:28px;height:28px;}
+
   .suggest{text-align:center;position:relative;z-index:1;}
   .prompt{font-family:'Sora',sans-serif;font-weight:700;font-size:1.125rem;text-align:center;margin:0 0 1.25rem;position:relative;z-index:1;}
   .suggest-btn{display:inline-flex;align-items:center;gap:.5rem;font-family:'Sora',sans-serif;font-weight:700;font-size:1rem;color:#fff;background:linear-gradient(135deg,var(--grad-start),var(--grad-mid),var(--grad-end));border-radius:16px;padding:.9rem 1.6rem;text-decoration:none;transition:transform .15s,opacity .15s;}
   .suggest-btn:hover{transform:translateY(-2px);opacity:.92;}
   .suggest-btn:focus-visible{outline:2px solid #fff;outline-offset:3px;}
   .footer{margin-top:3rem;color:var(--text-muted);font-size:.875rem;text-align:center;position:relative;z-index:1;}
-  @media(prefers-reduced-motion:reduce){.tile,.icon-tile,.suggest-btn,.pin-dot{transition:none;}}
-  @media(max-width:380px){.tile-grid{gap:.45rem;}.tile{min-height:72px;}}
+
+  @media(prefers-reduced-motion:reduce){.tile,.icon-tile,.suggest-btn,.pm-dot{transition:none;}}
+  @media(max-width:380px){.tile-grid{gap:.45rem;}.tile{min-height:72px;}.map-wrap{height:360px;}}
+  @media(min-width:480px){.map-wrap{height:480px;}}
+  @media(min-width:560px){.map-wrap{height:520px;}}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-PXPNNMJEVV"></script>
@@ -104,98 +104,20 @@
     <h1>Hey, I'm James.</h1>
     <p>Navy veteran turned Lyft driver with 16,000+ rides across Colorado. I've built this as a directory of each area's official visitor guide &mdash; the best starting point before you explore. Tap any city on the map to go straight to their tourism page. And if you know a hidden-gem restaurant I should add to my list, I'd love to hear about it.</p>
   </header>
+
   <h2 class="map-heading">Tap a city to explore</h2>
   <div class="map-legend" aria-hidden="true"><span class="leg"><span class="leg-dot" style="background:#3aaa72"></span>Mountains</span>  <span class="leg"><span class="leg-dot" style="background:#3d8fd4"></span>N. Colorado</span>  <span class="leg"><span class="leg-dot" style="background:#d9920a"></span>Front Range</span>  <span class="leg"><span class="leg-dot" style="background:#c85a30"></span>Western Slope</span>  <span class="leg"><span class="leg-dot" style="background:#b8861e"></span>S. Colorado</span></div>
+
   <div class="map-wrap">
-    <img src="colorado-relief.jpg" alt="Relief map of Colorado" loading="lazy">
-    <nav class="map-pins" aria-label="Colorado cities — tap to explore">
-      <a href="north-of-denver.html" class="pin" aria-label="N. Colorado" style="left:58.4%;top:13.3%;">
-        <span class="pin-dot" style="background:#3d8fd4"></span>
-        <span class="pill-r">N. Colorado</span>
-      </a>
-      <a href="https://www.steamboatchamber.com/" class="pin" aria-label="Steamboat Spgs" target="_blank" rel="noopener noreferrer" style="left:31.6%;top:12.9%;">
-        <span class="pin-dot" style="background:#3aaa72"></span>
-        <span class="pill-r">Steamboat Spgs</span>
-      </a>
-      <a href="https://www.visitestespark.com/" class="pin" aria-label="Estes Park" target="_blank" rel="noopener noreferrer" style="left:50.3%;top:15.6%;">
-        <span class="pin-dot" style="background:#3aaa72"></span>
-        <span class="pill-l">Estes Park</span>
-      </a>
-      <a href="https://visitglenwood.com/" class="pin" aria-label="Glenwood Spgs" target="_blank" rel="noopener noreferrer" style="left:24.6%;top:36.3%;">
-        <span class="pin-dot" style="background:#3aaa72"></span>
-        <span class="pill-l">Glenwood Spgs</span>
-      </a>
-      <a href="https://discovervail.com" class="pin" aria-label="Vail" target="_blank" rel="noopener noreferrer" style="left:38.2%;top:33.9%;">
-        <span class="pin-dot" style="background:#3aaa72"></span>
-        <span class="pill-l">Vail</span>
-      </a>
-      <a href="https://gobreck.com" class="pin" aria-label="Breckenridge" target="_blank" rel="noopener noreferrer" style="left:43.0%;top:38.0%;">
-        <span class="pin-dot" style="background:#3aaa72"></span>
-        <span class="pill-r">Breckenridge</span>
-      </a>
-      <a href="https://aspenchamber.org" class="pin" aria-label="Aspen / Snowmass" target="_blank" rel="noopener noreferrer" style="left:31.8%;top:45.2%;">
-        <span class="pin-dot" style="background:#3aaa72"></span>
-        <span class="pill-l">Aspen / Snowmass</span>
-      </a>
-      <a href="https://www.visitcrestedbutte.com/" class="pin" aria-label="Crested Butte" target="_blank" rel="noopener noreferrer" style="left:29.4%;top:53.3%;">
-        <span class="pin-dot" style="background:#3aaa72"></span>
-        <span class="pill-r">Crested Butte</span>
-      </a>
-      <a href="https://www.visittelluride.com/" class="pin" aria-label="Telluride" target="_blank" rel="noopener noreferrer" style="left:17.6%;top:76.5%;">
-        <span class="pin-dot" style="background:#3aaa72"></span>
-        <span class="pill-r">Telluride</span>
-      </a>
-      <a href="boulder.html" class="pin" aria-label="Boulder" style="left:53.9%;top:24.7%;">
-        <span class="pin-dot" style="background:#d9920a"></span>
-        <span class="pill-l">Boulder</span>
-      </a>
-      <a href="denver-area.html" class="pin" aria-label="Denver Area" style="left:57.9%;top:31.5%;">
-        <span class="pin-dot" style="background:#d9920a"></span>
-        <span class="pill-r">Denver Area</span>
-      </a>
-      <a href="colorado-springs.html" class="pin" aria-label="Colorado Springs / Manitou Springs" style="left:60.4%;top:54.2%;">
-        <span class="pin-dot" style="background:#d9920a"></span>
-        <span class="pill-r"><span class="pill-line">Colorado Springs</span><span class="pill-line">/ Manitou Springs</span></span>
-      </a>
-      <a href="https://www.colorfulcolorado.com/" class="pin" aria-label="Salida / BV" target="_blank" rel="noopener noreferrer" style="left:43.5%;top:61.6%;">
-        <span class="pin-dot" style="background:#b8861e"></span>
-        <span class="pill-l">Salida / BV</span>
-      </a>
-      <a href="canon-city.html" class="pin" aria-label="Cañon City" style="left:54.3%;top:64.0%;">
-        <span class="pin-dot" style="background:#d9920a"></span>
-        <span class="pill-l">Cañon City</span>
-      </a>
-      <a href="pueblo.html" class="pin" aria-label="Pueblo" style="left:63.4%;top:68.6%;">
-        <span class="pin-dot" style="background:#d9920a"></span>
-        <span class="pill-r">Pueblo</span>
-      </a>
-      <a href="https://www.visitgrandjunction.com/" class="pin" aria-label="Grand Junction" target="_blank" rel="noopener noreferrer" style="left:7.1%;top:48.4%;">
-        <span class="pin-dot" style="background:#c85a30"></span>
-        <span class="pill-r">Grand Junction</span>
-      </a>
-      <a href="https://www.durango.org/" class="pin" aria-label="Durango" target="_blank" rel="noopener noreferrer" style="left:16.7%;top:93.1%;">
-        <span class="pin-dot" style="background:#c85a30"></span>
-        <span class="pill-r">Durango</span>
-      </a>
-      <a href="https://www.visitpagosasprings.com/" class="pin" aria-label="Pagosa Springs" target="_blank" rel="noopener noreferrer" style="left:29.1%;top:93.2%;">
-        <span class="pin-dot" style="background:#c85a30"></span>
-        <span class="pill-l">Pagosa Springs</span>
-      </a>
-      <a href="southern-colorado.html" class="pin" aria-label="San Luis Valley" style="left:48.0%;top:85.0%;">
-        <span class="pin-dot" style="background:#b8861e"></span>
-        <span class="pill-l">San Luis Valley</span>
-      </a>
-      <a href="https://visittrinidadcolorado.com/" class="pin" aria-label="Trinidad" target="_blank" rel="noopener noreferrer" style="left:64.9%;top:95.7%;">
-        <span class="pin-dot" style="background:#b8861e"></span>
-        <span class="pill-l">Trinidad</span>
-      </a>
-    </nav>
+    <div id="co-map" aria-label="Colorado cities map"></div>
   </div>
+
   <nav class="tile-grid" aria-label="Additional links">
     <a class="tile" href="tip.html"><span>Send a Tip or Gift</span></a>
     <a class="tile" href="https://www.codot.gov/safety/carseats/assets/2024/cps_hb241055technicianfactsheet.pdf" target="_blank" rel="noopener noreferrer"><span>CO Child Seat Laws</span></a>
     <a class="tile" href="https://help.lyft.com/business/hc/en-us/articles/360001556927-Age-restrictions-for-transporting-minors" target="_blank" rel="noopener noreferrer"><span>Lyft Minors Policy</span></a>
   </nav>
+
   <div class="icon-row">
     <a class="icon-tile" href="https://www.youtube.com/@lyftdriverjames" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
       <svg viewBox="0 0 24 24" fill="none"><rect x="1" y="5" width="22" height="14" rx="4" fill="url(#yt)"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#0b0a10"/><defs><linearGradient id="yt" x1="1" y1="5" x2="23" y2="19" gradientUnits="userSpaceOnUse"><stop stop-color="#7c3aed"/><stop offset=".5" stop-color="#ec4899"/><stop offset="1" stop-color="#f97316"/></linearGradient></defs></svg>
@@ -204,11 +126,88 @@
       <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="url(#ig)" stroke-width="2"/><circle cx="12" cy="12" r="4.5" stroke="url(#ig)" stroke-width="2"/><circle cx="17.6" cy="6.4" r="1.3" fill="url(#ig)"/><defs><linearGradient id="ig" x1="2" y1="22" x2="22" y2="2" gradientUnits="userSpaceOnUse"><stop stop-color="#7c3aed"/><stop offset=".5" stop-color="#ec4899"/><stop offset="1" stop-color="#f97316"/></linearGradient></defs></svg>
     </a>
   </div>
+
   <section class="suggest">
     <h2 class="prompt">Know a hidden gem I should try?</h2>
     <a class="suggest-btn" href="mailto:DurangoLyft@gmail.com?subject=Hidden%20Gem%20Restaurant%20Recommendation&body=Restaurant%20Name%3A%20%0AAddress%3A%20%0AWhy%20I%20love%20it%3A%20">Send me your pick</a>
   </section>
   <footer class="footer"><p>Thanks for riding &mdash; see you on the road.</p></footer>
 </div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(function(){
+  // Init map — locked to Colorado, no pan/zoom
+  var map = L.map('co-map',{
+    zoomControl:false, scrollWheelZoom:false,
+    dragging:false, touchZoom:false,
+    doubleClickZoom:false, boxZoom:false, keyboard:false,
+    zoomSnap:0
+  });
+
+  // CartoDB Voyager tiles — matches Apple Maps style
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
+    subdomains:'abcd', maxZoom:19
+  }).addTo(map);
+
+  // Colorado exact bounds
+  var W=-109.06, E=-102.04, N=41.01, S=36.99;
+  var cLat=(N+S)/2, cLon=(W+E)/2, dLon=E-W;
+
+  // Calculate the exact zoom where Colorado's longitude span fills the container width.
+  // Formula: at Leaflet zoom z, 256×2^z pixels cover 360° longitude.
+  // So pixels = dLon × 256 × 2^z / 360  →  z = log2(containerW × 360 / (dLon × 256))
+  var containerW = document.getElementById('co-map').clientWidth || 400;
+  var zoom = Math.log2(containerW * 360 / (dLon * 256));
+  map.setView([cLat, cLon], zoom);
+
+  var CO = [[S,W],[N,E]];
+
+  // Gold state border
+  L.rectangle(CO, {color:'#f2a900', weight:2, fill:false, interactive:false}).addTo(map);
+
+  // City data: [lat, lon, labelHTML, side, href, dotColor, external]
+  var CITIES = [
+  [40.469,-104.955,"N. Colorado","r","north-of-denver.html","#3d8fd4",false],
+  [40.485,-106.832,"Steamboat Spgs","r","https://www.steamboatchamber.com/","#3aaa72",true],
+  [40.377,-105.522,"Estes Park","l","https://www.visitestespark.com/","#3aaa72",true],
+  [39.55,-107.324,"Glenwood Spgs","l","https://visitglenwood.com/","#3aaa72",true],
+  [39.643,-106.374,"Vail","l","https://discovervail.com","#3aaa72",true],
+  [39.482,-106.038,"Breckenridge","r","https://gobreck.com","#3aaa72",true],
+  [39.191,-106.818,"Aspen / Snowmass","l","https://aspenchamber.org","#3aaa72",true],
+  [38.87,-106.988,"Crested Butte","r","https://www.visitcrestedbutte.com/","#3aaa72",true],
+  [37.938,-107.812,"Telluride","r","https://www.visittelluride.com/","#3aaa72",true],
+  [40.015,-105.271,"Boulder","l","boulder.html","#d9920a",false],
+  [39.739,-104.99,"Denver Area","r","denver-area.html","#d9920a",false],
+  [38.834,-104.821,"<span class='pl'>Colorado Springs</span><span class='pl'>/ Manitou Springs</span>","r","colorado-springs.html","#d9920a",false],
+  [38.535,-106.0,"Salida / BV","l","https://www.colorfulcolorado.com/","#b8861e",true],
+  [38.441,-105.242,"Cañon City","l","canon-city.html","#d9920a",false],
+  [38.254,-104.609,"Pueblo","r","pueblo.html","#d9920a",false],
+  [39.064,-108.548,"Grand Junction","r","https://www.visitgrandjunction.com/","#c85a30",true],
+  [37.275,-107.88,"Durango","r","https://www.durango.org/","#c85a30",true],
+  [37.269,-107.01,"Pagosa Springs","l","https://www.visitpagosasprings.com/","#c85a30",true],
+  [37.601,-105.691,"San Luis Valley","l","southern-colorado.html","#b8861e",false],
+  [37.169,-104.502,"Trinidad","l","https://visittrinidadcolorado.com/","#b8861e",true]
+  ];
+
+  CITIES.forEach(function(c){
+    var lat=c[0], lon=c[1], label=c[2], side=c[3], href=c[4], color=c[5], ext=c[6];
+    var icon = L.divIcon({
+      className:'pm',
+      html:'<div class="pm-dot" style="background:'+color+'"></div>'
+          +'<span class="pm-pill pm-'+side+'">'+label+'</span>',
+      iconSize:[8,8],
+      iconAnchor:[4,4]
+    });
+    var marker = L.marker([lat,lon],{icon:icon,riseOnHover:true});
+    marker.on('click',function(){
+      if(ext) window.open(href,'_blank','noopener,noreferrer');
+      else window.location.href=href;
+    });
+    marker.addTo(map);
+  });
+})();
+</script>
 </body>
 </html>
