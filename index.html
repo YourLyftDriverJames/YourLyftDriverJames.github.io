@@ -56,7 +56,7 @@
     font-family:'Sora',sans-serif;font-weight:700;
     font-size:11px;color:#f5f3f7;
     white-space:nowrap;line-height:1.25;
-    pointer-events:none;user-select:none;
+    cursor:pointer;user-select:none;
   }
   /* 8 directional positions */
   .pm-r  {left:14px; top:50%;  transform:translateY(-50%);}
@@ -179,10 +179,13 @@
 
   CITIES.forEach(function(c){
     var lat=c[0],lon=c[1],label=c[2],pos=c[3],href=c[4],color=c[5],ext=c[6];
+    var clickAction = ext
+      ? "window.open('"+href.replace(/'/g,"\\'")+"','_blank','noopener,noreferrer')"
+      : "location.href='"+href.replace(/'/g,"\\'")+"'";
     var icon=L.divIcon({
       className:'pm',
       html:'<div class="pm-dot" style="background:'+color+'"></div>'
-          +'<span class="pm-pill pm-'+pos+'">'+label+'</span>',
+          +'<span class="pm-pill pm-'+pos+'" onclick="'+clickAction+'">'+label+'</span>',
       iconSize:[10,10],
       iconAnchor:[5,5]
     });
